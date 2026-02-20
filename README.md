@@ -1,4 +1,4 @@
-▣ DOSBanana
+▣ DOSBanana - ##(Projekt zu lernzwecken)
 
 <img src="assets/thumb.png">
 

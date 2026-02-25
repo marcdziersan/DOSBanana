@@ -38,13 +38,36 @@ Arcade-Mechaniken mit sauberer Struktur verbindet.
 
 # ⌨ Controls
 
-  Aktion           Taste
-  ---------------- ---------------------
-  Bewegung         A / D oder ← / →
-  Springen         SPACE / W / ↑
-  Flammen-Schuss   F oder CTRL
-  Restart          R (Endscreen) / ESC
-  Quit             Q
+<table style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; font-size: 14px;">
+  <thead>
+    <tr style="background:#111; color:#fff;">
+      <th style="text-align:left; padding:10px; border:1px solid #333;">Aktion</th>
+      <th style="text-align:left; padding:10px; border:1px solid #333;">Taste</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="background:#f7f7f7;">
+      <td style="padding:10px; border:1px solid #ddd;">Bewegung</td>
+      <td style="padding:10px; border:1px solid #ddd;"><code>A</code> / <code>D</code> oder <code>←</code> / <code>→</code></td>
+    </tr>
+    <tr style="background:#ffffff;">
+      <td style="padding:10px; border:1px solid #ddd;">Springen</td>
+      <td style="padding:10px; border:1px solid #ddd;"><code>SPACE</code> / <code>W</code> / <code>↑</code></td>
+    </tr>
+    <tr style="background:#f7f7f7;">
+      <td style="padding:10px; border:1px solid #ddd;">Flammen-Schuss</td>
+      <td style="padding:10px; border:1px solid #ddd;"><code>F</code> oder <code>CTRL</code></td>
+    </tr>
+    <tr style="background:#ffffff;">
+      <td style="padding:10px; border:1px solid #ddd;">Restart</td>
+      <td style="padding:10px; border:1px solid #ddd;"><code>R</code> (Endscreen) / <code>ESC</code></td>
+    </tr>
+    <tr style="background:#f7f7f7;">
+      <td style="padding:10px; border:1px solid #ddd;">Quit</td>
+      <td style="padding:10px; border:1px solid #ddd;"><code>Q</code></td>
+    </tr>
+  </tbody>
+</table>
 
 
 # 🛠 Technische Umsetzung

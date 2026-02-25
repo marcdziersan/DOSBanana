@@ -1,45 +1,104 @@
-▣ DOSBanana - (Projekt zu lernzwecken)
+# ▣ DOS Banana
+
+**Version 1.1.0 -- Flame & Fall Update**
+
+> Java Swing • Jump'n'Run • 1990/1991 Shareware-Vibe\
+> Ein Lernprojekt mit bewusst klassischem Aufbau.
 
 <img src="assets/thumb.png">
 
-Java Swing • Jump’n’Run • 1990/1991 Shareware-Vibe
+# 🎮 Was ist DOS Banana?
 
-DOS Banana ist ein kleines Retro-Jump’n’Run im Stil früher PC-Shareware-Games.
-Sammle alle Bananen, öffne die Tür und erreiche das nächste Level – während du Gegnern ausweichst oder sie von oben „stompst“.
+**DOS Banana** ist ein kleines 2D-Retro-Jump'n'Run im Stil früher
+PC-Shareware-Games der frühen 90er Jahre.
 
-🎮 Gameplay
+Das Projekt wurde bewusst ohne Game-Engine umgesetzt, um Rendering,
+Game-Loop, Kollision, Physik und Entity-Management vollständig selbst zu
+implementieren.
 
-Alle Bananen sammeln → Tür öffnet sich
+Es ist ein reines Java/Swing Lernprojekt, das klassische
+Arcade-Mechaniken mit sauberer Struktur verbindet.
 
-Gegner vermeiden oder von oben besiegen
 
-Mehrere Level als klassische Text-Tilemaps
+# 🚀 Features
 
-⌨ Controls (Default)
+## 🟡 Gameplay
 
-Move: A/D oder ←/→
+-   Alle Bananen sammeln → Tür öffnet sich\
+-   Gegner vermeiden oder von oben „stompen"\
+-   Mehrere Level als klassische Text-Tilemaps
 
-Jump: SPACE / W / ↑
+## 🔥 Version 1.1.0
 
-Restart: R (Endscreen) / ESC (Hard Reset)
+-   Flame Power-Up (P) sammeln\
+-   Flammen in Laufrichtung schießen (F / CTRL)\
+-   Herz-System mit Half-Hearts\
+-   Fallschaden bei hohen Stürzen
 
-Quit: Q (Endscreen)
 
-🛠 Tech Stack
+# ⌨ Controls
 
-Java
+  Aktion           Taste
+  ---------------- ---------------------
+  Bewegung         A / D oder ← / →
+  Springen         SPACE / W / ↑
+  Flammen-Schuss   F oder CTRL
+  Restart          R (Endscreen) / ESC
+  Quit             Q
 
-Swing (2D Rendering)
 
-Game Loop via Timer
+# 🛠 Technische Umsetzung
 
-Rendering über paintComponent(Graphics)
+## Game Loop
 
-Tile-Collision + Bounding-Box Entity-System
+-   javax.swing.Timer (\~60 FPS)
+-   Input → Update → Kollision → Render
 
-Level als Textdateien (#, @, B, X, …)
+## Rendering
 
-🖥 Style
+-   2D via Graphics2D
+-   paintComponent()
+-   Kein Framework, keine Engine
 
-Klare Tiles, starke Kontraste, optionaler CRT-Look – bewusst simpel gehalten, schnell startbar, sofort spielbar.
-Kein Engine-Overkill, volle Kontrolle über Timing, Physik und Kollision.
+## Physik
+
+-   Schwerkraft
+-   Sprunggeschwindigkeit
+-   Bounding-Box Kollision
+-   Fall-Distanz Tracking
+
+## Level-System
+
+Textdateien mit Symbolen:
+
+  Symbol   Bedeutung
+  -------- ----------------
+  \#       Solid Tile
+  @        Player Start
+  B        Banana
+  X        Enemy
+  P        Flame Power-Up
+  E        Exit
+
+
+# ▶ Build & Run
+
+## Kompilieren
+
+javac dosbanana/*.java dosbanana/entity/*.java dosbanana/gfx/\*.java
+
+## Starten
+
+java dosbanana.Main
+
+
+# 🧠 Lernziele
+
+-   Game Loop verstehen
+-   Physik implementieren
+-   Collision Detection
+-   Entity Lifecycle
+-   Strukturierte Java-Projekte
+
+© 2026 Marcus Dziersan\
+Lernprojekt -- Java Swing Retro Game

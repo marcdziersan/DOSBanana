@@ -10,7 +10,7 @@ import java.util.List;
 public class GamePanel extends JPanel implements KeyListener {
     private static final int W = 800, H = 600;
     private static final int TICK_MS = 16; // ~60fps
-    private static final int START_LIVES = 3;
+    private static final int START_LIVES = 3; // hearts
 
     private final dosbanana.gfx.BackgroundWall bg = new dosbanana.gfx.BackgroundWall();
 
@@ -21,6 +21,7 @@ public class GamePanel extends JPanel implements KeyListener {
     private Timer timer;
 
     private boolean left, right, jump;
+    private boolean shoot;
 
     private enum ScreenState {
         START,
@@ -33,7 +34,7 @@ public class GamePanel extends JPanel implements KeyListener {
 
     // Meta / Endscreen-Info
     private static final String GAME_TITLE = "DOS Banana";
-    private static final String GAME_VERSION = "1.0";
+    private static final String GAME_VERSION = "1.1.0";
     private static final String GAME_AUTHOR = "Marcus Dziersan";
     private static final String GAME_COPYRIGHT = "\u00A9 2026 Marcus Dziersan";
 
@@ -45,13 +46,14 @@ public class GamePanel extends JPanel implements KeyListener {
         levels = LevelLoader.discoverLevelFiles("levels");
 
         if (levels.isEmpty()) {
-            // Fallback: versuch levels\level1.txt
+            // Fallback: versuch levels\\level1.txt
             world = new World("levels\\level1.txt", 0, START_LIVES);
         } else {
             world = new World(levels.get(levelIdx), 0, START_LIVES);
         }
 
         timer = new Timer(TICK_MS, e -> {
+            // In nicht-PLAYING Screens: nur repaint, keine Simulation
             if (state != ScreenState.PLAYING) {
                 repaint();
                 return;
@@ -60,14 +62,16 @@ public class GamePanel extends JPanel implements KeyListener {
             handleInput();
             world.update(1.0 / 60.0);
 
-            if (world.getLives() <= 0) {
+            // Game Over?
+            if (world.getHealthHalf() <= 0) {
                 state = ScreenState.GAME_OVER;
                 repaint();
                 timer.stop();
                 return;
             }
 
-            if (state == ScreenState.PLAYING && world.consumeExitTriggered()) {
+            // Next level / Win?
+            if (world.consumeExitTriggered()) {
                 tryNextLevelOrWin();
             }
 
@@ -91,9 +95,11 @@ public class GamePanel extends JPanel implements KeyListener {
         int next = levelIdx + 1;
         if (next < levels.size() && LevelLoader.existsFile(levels.get(next))) {
             int carryScore = world.getScore();
-            int carryLives = world.getLives();
+            int carryLives = world.getMaxHearts();
+            int carryHealthHalf = world.getHealthHalf();
+
             levelIdx = next;
-            world = new World(levels.get(levelIdx), carryScore, carryLives);
+            world = new World(levels.get(levelIdx), carryScore, carryLives, carryHealthHalf);
         } else {
             state = ScreenState.WIN;
             repaint();
@@ -101,20 +107,24 @@ public class GamePanel extends JPanel implements KeyListener {
         }
     }
 
-private void restartGame() {
-    timer.stop();
-    state = ScreenState.START;
-    levelIdx = 0;
+    private void restartGame() {
+        timer.stop();
 
-    if (levels.isEmpty()) {
-        world = new World("levels\\level1.txt", 0, START_LIVES);
-    } else {
-        world = new World(levels.get(levelIdx), 0, START_LIVES);
+        // input flags reset
+        left = right = jump = shoot = false;
+
+        state = ScreenState.START;
+        levelIdx = 0;
+
+        if (levels.isEmpty()) {
+            world = new World("levels\\level1.txt", 0, START_LIVES);
+        } else {
+            world = new World(levels.get(levelIdx), 0, START_LIVES);
+        }
+
+        timer.start();
+        repaint();
     }
-
-    timer.start();
-    repaint();
-}
 
     private void handleInput() {
         Player p = world.getPlayer();
@@ -125,12 +135,15 @@ private void restartGame() {
 
         if (jump) p.requestJump();
         jump = false;
+
+        if (shoot) p.requestShoot();
+        shoot = false;
     }
 
     private void renderStartScreen(Graphics2D g2) {
         // DOS-like overlay box
-        int boxW = 640;
-        int boxH = 360;
+        int boxW = 660;
+        int boxH = 410;
         int x = (getWidth() - boxW) / 2;
         int y = (getHeight() - boxH) / 2;
 
@@ -144,14 +157,17 @@ private void restartGame() {
         g2.drawString("Collect all bananas to open the door.", x + 30, y + 105);
         g2.drawString("Avoid enemies — stomp them from above.", x + 30, y + 130);
 
-        g2.drawString("Controls:", x + 30, y + 175);
-        g2.drawString("  Left/Right  : A/D or Arrow Keys", x + 30, y + 200);
-        g2.drawString("  Jump        : SPACE / W / UP", x + 30, y + 225);
-        g2.drawString("  Restart     : ESC", x + 30, y + 250);
-        g2.drawString("  Quit        : Q", x + 30, y + 275);
+        // gameplay additions
+        g2.drawString("Power-up: Collect 'P' to unlock Flame Shot.", x + 30, y + 160);
+        g2.drawString("Fall damage: Big falls (higher than a normal jump) hurt (1/2 heart).", x + 30, y + 185);
 
-        g2.setFont(new Font("Monospaced", Font.BOLD, 18));
-        g2.drawString("Press ENTER or SPACE to start", x + 30, y + 320);
+        g2.drawString("Controls:", x + 30, y + 230);
+        g2.drawString("  Left/Right  : A/D or Arrow Keys", x + 30, y + 255);
+        g2.drawString("  Jump        : SPACE / W / UP", x + 30, y + 280);
+        g2.drawString("  Flame Shot  : F or CTRL (after power-up)", x + 30, y + 305);
+        g2.drawString("  Start       : ENTER or SPACE", x + 30, y + 330);
+        g2.drawString("  Restart     : ESC (hard reset)", x + 30, y + 355);
+        g2.drawString("  Quit        : Q", x + 30, y + 380);
     }
 
     private void renderEndScreen(Graphics2D g2, boolean win) {
@@ -180,9 +196,9 @@ private void restartGame() {
         g2.drawString("  Tech     : Java + Swing", x + 30, y + 245);
 
         g2.drawString("Keys:", x + 30, y + 290);
-        g2.drawString("  R  Restart", x + 30, y + 315);
+        g2.drawString("  R   Restart", x + 30, y + 315);
         g2.drawString("  ESC Restart (hard reset)", x + 30, y + 335);
-        g2.drawString("  Q  Quit", x + 30, y + 355);
+        g2.drawString("  Q   Quit", x + 30, y + 355);
     }
 
     private void drawOverlayBox(Graphics2D g2, int x, int y, int w, int h) {
@@ -204,7 +220,7 @@ private void restartGame() {
         Graphics2D g2 = (Graphics2D) g.create();
         bg.paint(g2, getWidth(), getHeight());
 
-        // In START zeigen wir NUR den Screen (kein World-Render, damit es "clean" bleibt)
+        // START screen: nur Overlay
         if (state == ScreenState.START) {
             renderStartScreen(g2);
             g2.dispose();
@@ -223,7 +239,8 @@ private void restartGame() {
         g2.dispose();
     }
 
-    @Override public void keyTyped(KeyEvent e) {}
+    @Override
+    public void keyTyped(KeyEvent e) {}
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -235,12 +252,18 @@ private void restartGame() {
                 if (state == ScreenState.START) {
                     state = ScreenState.PLAYING;
                     repaint();
-                } else {
+                } else if (state == ScreenState.PLAYING) {
                     jump = true;
                 }
             }
 
-            case KeyEvent.VK_UP, KeyEvent.VK_W -> jump = true;
+            case KeyEvent.VK_UP, KeyEvent.VK_W -> {
+                if (state == ScreenState.PLAYING) jump = true;
+            }
+
+            case KeyEvent.VK_F, KeyEvent.VK_CONTROL -> {
+                if (state == ScreenState.PLAYING) shoot = true;
+            }
 
             case KeyEvent.VK_ENTER -> {
                 if (state == ScreenState.START) {
@@ -266,6 +289,7 @@ private void restartGame() {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_LEFT, KeyEvent.VK_A -> left = false;
             case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> right = false;
+            default -> {}
         }
     }
 }

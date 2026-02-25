@@ -71,14 +71,7 @@ Arcade-Mechaniken mit sauberer Struktur verbindet.
 
 Textdateien mit Symbolen:
 
-  Symbol   Bedeutung
-  -------- ----------------
-  \#       Solid Tile
-  @        Player Start
-  B        Banana
-  X        Enemy
-  P        Flame Power-Up
-  E        Exit
+<table style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; font-size: 14px;"> <thead> <tr style="background:#111; color:#fff;"> <th style="text-align:left; padding:10px; border:1px solid #333;">Symbol</th> <th style="text-align:left; padding:10px; border:1px solid #333;">Bedeutung</th> </tr> </thead> <tbody> <tr style="background:#f7f7f7;"> <td style="padding:10px; border:1px solid #ddd;"><code>#</code></td> <td style="padding:10px; border:1px solid #ddd;">Solid Tile</td> </tr> <tr style="background:#ffffff;"> <td style="padding:10px; border:1px solid #ddd;"><code>@</code></td> <td style="padding:10px; border:1px solid #ddd;">Player Start</td> </tr> <tr style="background:#f7f7f7;"> <td style="padding:10px; border:1px solid #ddd;"><code>B</code></td> <td style="padding:10px; border:1px solid #ddd;">Banana</td> </tr> <tr style="background:#ffffff;"> <td style="padding:10px; border:1px solid #ddd;"><code>X</code></td> <td style="padding:10px; border:1px solid #ddd;">Enemy</td> </tr> <tr style="background:#f7f7f7;"> <td style="padding:10px; border:1px solid #ddd;"><code>P</code></td> <td style="padding:10px; border:1px solid #ddd;">Flame Power-Up</td> </tr> <tr style="background:#ffffff;"> <td style="padding:10px; border:1px solid #ddd;"><code>E</code></td> <td style="padding:10px; border:1px solid #ddd;">Exit</td> </tr> </tbody> </table>
 
 
 # ▶ Build & Run

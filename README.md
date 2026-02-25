@@ -99,8 +99,47 @@ Textdateien mit Symbolen:
 
 # ▶ Build & Run
 
-<pre style="background:#0f0f0f; color:#e6e6e6; padding:14px 16px; border-radius:10px; overflow:auto; border:1px solid #2a2a2a; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size:13px; line-height:1.5;"> @echo off setlocal enabledelayedexpansion cd /d "%~dp0" set OUT=out echo. echo [1/3] Cleaning output folder... if exist "%OUT%" rmdir /s /q "%OUT%" mkdir "%OUT%" echo. echo [2/3] Compiling... set SOURCELIST=%TEMP%\sources_dosbanana_%RANDOM%.txt if exist "%SOURCELIST%" del /q "%SOURCELIST%" for /r %%F in (*.java) do ( echo %%F&gt;&gt; "%SOURCELIST%" ) javac -encoding UTF-8 -g -d "%OUT%" @"%SOURCELIST%" if errorlevel 1 ( echo. echo [ERROR] Compilation failed. del /q "%SOURCELIST%" 2&gt;nul pause exit /b 1 ) del /q "%SOURCELIST%" 2&gt;nul echo. echo [3/3] Starting... java -cp "%OUT%" dosbanana.Game echo. pause endlocal </pre>
+<pre style="background:#0f0f0f; color:#e6e6e6; padding:14px 16px; border-radius:10px; overflow:auto; border:1px solid #2a2a2a; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size:13px; line-height:1.5;">
+@echo off
+setlocal enabledelayedexpansion
 
+cd /d "%~dp0"
+
+set OUT=out
+
+echo.
+echo [1/3] Cleaning output folder...
+if exist "%OUT%" rmdir /s /q "%OUT%"
+mkdir "%OUT%"
+
+echo.
+echo [2/3] Compiling...
+set SOURCELIST=%TEMP%\sources_dosbanana_%RANDOM%.txt
+if exist "%SOURCELIST%" del /q "%SOURCELIST%"
+
+for /r %%F in (*.java) do (
+  echo %%F&gt;&gt; "%SOURCELIST%"
+)
+
+javac -encoding UTF-8 -g -d "%OUT%" @"%SOURCELIST%"
+if errorlevel 1 (
+  echo.
+  echo [ERROR] Compilation failed.
+  del /q "%SOURCELIST%" 2&gt;nul
+  pause
+  exit /b 1
+)
+
+del /q "%SOURCELIST%" 2&gt;nul
+
+echo.
+echo [3/3] Starting...
+java -cp "%OUT%" dosbanana.Game
+
+echo.
+pause
+endlocal
+</pre>
 
 # 🧠 Lernziele
 
